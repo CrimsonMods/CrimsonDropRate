@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CrimsonDropRate.Systems;
+﻿using CrimsonDropRate.Systems;
 using HarmonyLib;
 using ProjectM;
+using System;
 
 namespace CrimsonDropRate.Hooks;
 

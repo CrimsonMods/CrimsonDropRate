@@ -1,15 +1,12 @@
-﻿using ProjectM.EOS;
-using ProjectM.Shared;
+﻿using Bloodstone.API;
+using CrimsonDropRate.Configs;
 using ProjectM;
+using ProjectM.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
-using Bloodstone.API;
 using Unity.Collections;
-using CrimsonDropRate.Configs;
+using Unity.Entities;
 
 namespace CrimsonDropRate.Systems;
 
@@ -68,5 +65,4 @@ internal static class DropRateSystem
 
         return result;
     }
-}
 }
