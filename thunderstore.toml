@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 namespace = "skytech6"
 name = "CrimsonDropRate"
 versionNumber = "0.1.0"
-description = "Command framework for developers to easily create universal commands for their plugins."
+description = "Modifies the item group drop rate, not the item quantity drop"
 websiteUrl = "https://github.com/SkyTech6/CrimsonDropRate/"
 containsNsfwContent = false
 
