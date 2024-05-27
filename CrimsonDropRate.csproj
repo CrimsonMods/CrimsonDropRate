@@ -19,9 +19,12 @@
     <PackageReference Include="BepInEx.Core" Version="6.0.0-be.691" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="VRising.Unhollowed.Client" Version="1.0.*" />
-    <PackageReference Include="VRising.Bloodstone" Version="0.2.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\build.yml" />
+    <None Include=".github\workflows\release.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="images\" />
   </ItemGroup>
 </Project>
