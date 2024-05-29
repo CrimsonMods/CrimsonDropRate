@@ -1,4 +1,5 @@
-﻿using CrimsonDropRate.Configs;
+﻿using Bloodstone.API;
+using CrimsonDropRate.Configs;
 using ProjectM;
 using ProjectM.Shared;
 using System;
@@ -18,16 +19,16 @@ internal static class DropRateSystem
 
         Plugin.Logger.LogInfo($"Changing drop rate values. Modifier: {DropRateConfig.DropRateModifier.Value}");
 
-        var collection = Plugin.Server.GetExistingSystemManaged<PrefabCollectionSystem>();
+        var collection = VWorld.Server.GetExistingSystemManaged<PrefabCollectionSystem>();
 
         foreach (var dropTable in GetEntitiesDropTables())
         {
             var dropTableEntity = collection.PrefabLookupMap[dropTable.DropTableGuid];
 
-            if (!Plugin.Server.EntityManager.HasComponent<DropTableDataBuffer>(dropTableEntity))
+            if (!VWorld.Server.EntityManager.HasComponent<DropTableDataBuffer>(dropTableEntity))
                 continue;
 
-            var buffer = Plugin.Server.EntityManager.GetBuffer<DropTableDataBuffer>(dropTableEntity);
+            var buffer = VWorld.Server.EntityManager.GetBuffer<DropTableDataBuffer>(dropTableEntity);
             var newBuffer = new List<DropTableDataBuffer>();
 
             foreach (var dropTableData in buffer)
@@ -51,14 +52,14 @@ internal static class DropRateSystem
     private static IList<DropTableBuffer> GetEntitiesDropTables()
     {
         var result = new List<DropTableBuffer>();
-        var entities = Plugin.Server.EntityManager.CreateEntityQuery(new EntityQueryDesc()
+        var entities = VWorld.Server.EntityManager.CreateEntityQuery(new EntityQueryDesc()
         {
             All = new ComponentType[] { ComponentType.ReadOnly<DropTableBuffer>() },
             Options = EntityQueryOptions.IncludeAll
         }).ToEntityArray(Allocator.Temp);
 
         foreach (var entity in entities)
-            foreach (var dropTable in Plugin.Server.EntityManager.GetBuffer<DropTableBuffer>(entity))
+            foreach (var dropTable in VWorld.Server.EntityManager.GetBuffer<DropTableBuffer>(entity))
                 if (!result.Any(r => r.DropTableGuid == dropTable.DropTableGuid))
                     result.Add(dropTable);
 
