@@ -1,25 +1,22 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
-using Bloodstone.API;
 using CrimsonDropRate.Configs;
 using HarmonyLib;
-using Unity.Entities;
-using UnityEngine;
 
 namespace CrimsonDropRate;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency("gg.deca.Bloodstone")]
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
+    internal static Plugin Instance { get; private set; }
+    public static Harmony Harmony => Instance._harmony;
     public static ManualLogSource Logger;
 
     public override void Load()
     {
-        if (!VWorld.IsServer) return;
-
+        Instance = this;
         Logger = Log;
         DropRateConfig.Initialize(Config);
 

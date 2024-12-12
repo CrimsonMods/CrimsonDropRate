@@ -1,5 +1,4 @@
-﻿using Bloodstone.API;
-using CrimsonDropRate.Configs;
+﻿using CrimsonDropRate.Configs;
 using ProjectM;
 using ProjectM.Shared;
 using System;
@@ -19,47 +18,67 @@ internal static class DropRateSystem
 
         Plugin.Logger.LogInfo($"Changing drop rate values. Modifier: {DropRateConfig.DropRateModifier.Value}");
 
-        var collection = VWorld.Server.GetExistingSystemManaged<PrefabCollectionSystem>();
-
-        foreach (var dropTable in GetEntitiesDropTables())
+        try
         {
-            var dropTableEntity = collection.PrefabLookupMap[dropTable.DropTableGuid];
+            var collection = Core.SystemService.PrefabCollectionSystem;
 
-            if (!VWorld.Server.EntityManager.HasComponent<DropTableDataBuffer>(dropTableEntity))
-                continue;
-
-            var buffer = VWorld.Server.EntityManager.GetBuffer<DropTableDataBuffer>(dropTableEntity);
-            var newBuffer = new List<DropTableDataBuffer>();
-
-            foreach (var dropTableData in buffer)
-                newBuffer.Add(new DropTableDataBuffer()
+            foreach (var dropTable in GetEntitiesDropTables())
+            {
+                try
                 {
-                    DropRate = Math.Min(1, dropTableData.DropRate * DropRateConfig.DropRateModifier.Value),
-                    ItemGuid = dropTableData.ItemGuid,
-                    ItemType = dropTableData.ItemType,
-                    Quantity = dropTableData.Quantity
-                });
+                    var dropTableEntity = collection._PrefabGuidToEntityMap[dropTable.DropTableGuid];
+                    if (dropTableEntity.Equals(Entity.Null) || !Core.Server.EntityManager.HasComponent<DropTableDataBuffer>(dropTableEntity))
+                        continue;
 
-            buffer.RemoveRange(0, buffer.Length);
+                    var buffer = Core.Server.EntityManager.GetBuffer<DropTableDataBuffer>(dropTableEntity);
+                    var newBuffer = new List<DropTableDataBuffer>();
 
-            foreach (var dropTableData in newBuffer)
-                buffer.Add(dropTableData);
+                    foreach (var dropTableData in buffer)
+                    {
+                        Plugin.Logger.LogInfo($"DropRate: {dropTableData.DropRate}");
+                        newBuffer.Add(new DropTableDataBuffer()
+                        {
+                            DropRate = Math.Min(1, (float)(dropTableData.DropRate * DropRateConfig.DropRateModifier.Value)),
+                            ItemGuid = dropTableData.ItemGuid,
+                            ItemType = dropTableData.ItemType,
+                            Quantity = dropTableData.Quantity
+                        });
+                    }
+
+                    buffer.RemoveRange(0, buffer.Length);
+
+                    foreach (var dropTableData in newBuffer)
+                        buffer.Add(dropTableData);
+
+                }
+                catch (Exception ex)
+                {
+                    Plugin.Logger.LogError($"Error accessing dropTable: {ex.Message}\nStackTrace: {ex.StackTrace}");
+                }
+
+            }
         }
-
-        Plugin.Logger.LogInfo($"Drop rate values changed successfully");
+        catch (Exception ex)
+        {
+            Plugin.Logger.LogError($"Error Setting Drop Rate Values: {ex.Message}\nStackTrace: {ex.StackTrace}");
+        }
+        finally
+        {
+            Plugin.Logger.LogInfo($"Drop rate values changed successfully");
+        }
     }
 
     private static IList<DropTableBuffer> GetEntitiesDropTables()
     {
         var result = new List<DropTableBuffer>();
-        var entities = VWorld.Server.EntityManager.CreateEntityQuery(new EntityQueryDesc()
+        var entities = Core.Server.EntityManager.CreateEntityQuery(new EntityQueryDesc()
         {
             All = new ComponentType[] { ComponentType.ReadOnly<DropTableBuffer>() },
             Options = EntityQueryOptions.IncludeAll
         }).ToEntityArray(Allocator.Temp);
 
         foreach (var entity in entities)
-            foreach (var dropTable in VWorld.Server.EntityManager.GetBuffer<DropTableBuffer>(entity))
+            foreach (var dropTable in Core.Server.EntityManager.GetBuffer<DropTableBuffer>(entity))
                 if (!result.Any(r => r.DropTableGuid == dropTable.DropTableGuid))
                     result.Add(dropTable);
 

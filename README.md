@@ -7,7 +7,6 @@ What is the difference between `DropTableModifier_General` native server configu
 
 ## Installation
 * Install [BepInEx](https://v-rising.thunderstore.io/package/BepInEx/BepInExPack_V_Rising/)
-* Install [Bloodstone](https://github.com/decaprime/Bloodstone/releases/tag/v0.2.1)
 * Extract _DropRateModifier.dll_ into _(VRising server folder)/BepInEx/plugins_
 
 ## Configurable Values
@@ -19,19 +18,29 @@ What is the difference between `DropTableModifier_General` native server configu
 # Default value: 1
 DropRateModifier = 1
 ```
+The lowest DropRate in the game is 0.001. The highest a DropRate can be is 1.0. 
+
+New Value = the lesser of (DropRate * DropRateModifier) or 1.0
+
+Therefore, the highest possible DropRateModifier before it no longer has an effect would be 1000. At that point every table's drop rate would be 1.0. 
+
+_Do not ask me why you can't tell a difference if your modifier is set to 3. You changed a 0.05 somewhat uncommon drop to a slightly more common uncommon drop of 0.15._
+
 ## Support
 
 Want to support my V Rising Mod development? 
 
-Join [Vexor World]() where I create exclusive content mods
+Donations Accepted
 
-Donations Accepted with [Ko-Fi](https://ko-fi.com/skytech6)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/skytech6)
 
 Or buy/play my games! 
 
 [Train Your Minibot](https://store.steampowered.com/app/713740/Train_Your_Minibot/) 
 
-[Boring Movies](https://store.steampowered.com/app/1792500/Boring_Movies/)
+[Boring Movies](https://store.steampowered.com/app/1792500/Boring_Movies/) **Free to Play!**
+
+**If you are looking to hire someone to make a mod for any Unity game reach out to me on Discord! (skytech6)**
 
 ### Credits
 Ported [VRisingDropRateModifier](https://github.com/KinetsuDEV/VRisingDropRateModifier)
