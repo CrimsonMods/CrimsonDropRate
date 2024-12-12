@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using CrimsonDropRate.Systems;
 using Unity.Entities;
@@ -22,21 +21,5 @@ internal static class Core
     static World GetServerWorld()
     {
         return World.s_AllWorlds.ToArray().FirstOrDefault(world => world.Name == "Server");
-    }
-
-    public static void Dump(this Entity entity, string filePath)
-    {
-        File.AppendAllText(filePath, $"--------------------------------------------------" + Environment.NewLine);
-        File.AppendAllText(filePath, $"Dumping components of {entity.ToString()}:" + Environment.NewLine);
-        foreach (var componentType in Core.Server.EntityManager.GetComponentTypes(entity))
-        { File.AppendAllText(filePath, $"{componentType.ToString()}" + Environment.NewLine); }
-        File.AppendAllText(filePath, $"--------------------------------------------------" + Environment.NewLine);
-        File.AppendAllText(filePath, DumpEntity(entity));
-    }
-    private static string DumpEntity(Entity entity, bool fullDump = true)
-    {
-        var sb = new Il2CppSystem.Text.StringBuilder();
-        ProjectM.EntityDebuggingUtility.DumpEntity(Core.Server, entity, fullDump, sb);
-        return sb.ToString();
     }
 }
